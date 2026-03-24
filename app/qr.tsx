@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: Spacing.xl, paddingVertical: Spacing.lg, borderBottomWidth: 1,
+    paddingHorizontal: Spacing.xl, paddingTop: Spacing.xxxl, paddingBottom: Spacing.lg, borderBottomWidth: 1,
   },
   title: { ...Typography.h1 },
   tabRow: { flexDirection: 'row', margin: Spacing.xl, borderRadius: BorderRadius.full, padding: 4, gap: 4 },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   infoText: { ...Typography.bodySmall },
   hint: { ...Typography.bodySmall, textAlign: 'center', marginTop: Spacing.lg, marginBottom: Spacing.xl },
-  actions: { flexDirection: 'row', gap: Spacing.md, width: '100%' },
+  actions: { flexDirection: 'row', gap: Spacing.md, width: '100%', marginBottom: Spacing.xxxl },
   actionBtn: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: Spacing.xs, paddingVertical: Spacing.md, borderRadius: BorderRadius.lg, borderWidth: 1,
