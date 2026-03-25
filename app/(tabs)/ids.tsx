@@ -9,17 +9,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import { useTheme } from '../../constants/ThemeContext';
 import { BorderRadius, Spacing } from '../../constants/colors';
-import IDCardItem from '../../components/IDCardItem';
 import { loadIDs, saveIDs } from '../../constants/storage';
 import type { StoredID } from '../../constants/types';
 
 // ── Official-style ID logos ────────────────────────────────────────────────
-
 function PhilSysLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#0038A8" />
-      {/* Philippine sun rays */}
       <G transform="translate(50,44)">
         {[0,45,90,135,180,225,270,315].map((deg, i) => (
           <Path key={i} d={`M0,0 L${Math.cos((deg-90)*Math.PI/180)*22} ${Math.sin((deg-90)*Math.PI/180)*22}`}
@@ -28,65 +25,44 @@ function PhilSysLogo({ size = 44 }: { size?: number }) {
         <Circle cx="0" cy="0" r="10" fill="#FCD116" />
         <Circle cx="0" cy="0" r="6" fill="#0038A8" />
       </G>
-      {/* PSA text */}
       <Rect x="12" y="72" width="76" height="18" rx="4" fill="#CE1126" />
       <Path d="M20 76 L20 86 M20 81 L26 81 M26 76 L26 86" stroke="white" strokeWidth="2" strokeLinecap="round" />
       <Path d="M32 76 L36 86 L40 76" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 }
-
 function LTOLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#D32F2F" />
-      {/* Steering wheel */}
       <Circle cx="50" cy="46" r="28" stroke="white" strokeWidth="5" fill="none" />
       <Circle cx="50" cy="46" r="10" stroke="white" strokeWidth="4" fill="#D32F2F" />
       <Path d="M50 18 L50 36 M50 56 L50 74 M22 46 L40 46 M60 46 L78 46"
         stroke="white" strokeWidth="4" strokeLinecap="round" />
-      {/* LTO badge */}
       <Rect x="18" y="76" width="64" height="17" rx="4" fill="white" />
       <Path d="M26 80 L26 89 L32 89" stroke="#D32F2F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <Path d="M36 80 L40 84 L44 80 L44 89 M36 80 L36 89" stroke="#D32F2F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <Path d="M50 84 L50 89 M50 80 L50 84 M48 80 L54 80 M48 84 L54 84 M48 89 L54 89" stroke="#D32F2F" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <Path d="M60 80 L60 89 M60 80 L68 80 L68 84 L60 84" stroke="#D32F2F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );
 }
-
 function SSSLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#003087" />
-      {/* SSS shield */}
       <Path d="M50 10 L80 25 L80 55 C80 72 65 86 50 92 C35 86 20 72 20 55 L20 25 Z"
         fill="none" stroke="#FFD700" strokeWidth="3" />
-      <Path d="M50 18 L74 31 L74 55 C74 69 61 81 50 86 C39 81 26 69 26 55 L26 31 Z"
-        fill="#003087" />
-      {/* SSS letters */}
       <Path d="M32 42 C32 38 38 36 42 39 C44 41 42 44 38 45 C34 46 32 49 35 52 C38 54 44 53 44 49"
         stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
       <Path d="M48 42 C48 38 54 36 58 39 C60 41 58 44 54 45 C50 46 48 49 51 52 C54 54 60 53 60 49"
         stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-      <Path d="M64 42 C64 38 70 36 74 39 C76 41 74 44 70 45 C66 46 64 49 67 52 C70 54 76 53 76 49"
-        stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" />
       <Rect x="20" y="73" width="60" height="16" rx="4" fill="#FFD700" />
-      <Path d="M30 77 L30 85 L36 85" stroke="#003087" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <Path d="M40 81 A4 5 0 0 1 48 81 A4 5 0 0 1 40 81 Z" stroke="#003087" strokeWidth="2.5" fill="none" />
-      <Path d="M52 77 L52 85 M52 77 L60 77 L60 81 L52 81" stroke="#003087" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <Path d="M64 77 L64 85 M64 77 L72 77 M64 81 L70 81 M64 85 L72 85" stroke="#003087" strokeWidth="2.5" strokeLinecap="round" fill="none" />
     </Svg>
   );
 }
-
 function PassportLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#0038A8" />
-      {/* Passport book */}
       <Rect x="18" y="14" width="64" height="76" rx="6" fill="#0D3B8A" stroke="#FCD116" strokeWidth="2" />
-      {/* Philippine eagle stylized */}
       <Circle cx="50" cy="38" r="14" fill="none" stroke="#FCD116" strokeWidth="2" />
       <G transform="translate(50,38)">
         {[0,60,120,180,240,300].map((deg, i) => (
@@ -95,18 +71,11 @@ function PassportLogo({ size = 44 }: { size?: number }) {
         ))}
         <Circle cx="0" cy="0" r="4" fill="#FCD116" />
       </G>
-      {/* DFA text */}
       <Rect x="24" y="62" width="52" height="14" rx="3" fill="#CE1126" />
-      <Path d="M30 65 L30 74 C30 74 34 76 36 72 C38 68 36 65 30 65Z" stroke="white" strokeWidth="2" fill="none" />
-      <Path d="M40 65 L40 74 M40 65 L46 65" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <Path d="M50 65 L50 74 M48 65 L54 65 M48 74 L54 74" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      {/* PASSPORT text bar */}
       <Rect x="18" y="80" width="64" height="12" rx="3" fill="#FCD116" />
-      <Path d="M22 83 L22 90 L25 90 C27 90 28 88 27 86 C26 84 24 84 22 84" stroke="#0038A8" strokeWidth="1.8" strokeLinecap="round" fill="none" />
     </Svg>
   );
 }
-
 function UMIDLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
@@ -117,32 +86,24 @@ function UMIDLogo({ size = 44 }: { size?: number }) {
       <Rect x="52" y="45" width="20" height="4" rx="2" fill="rgba(255,255,255,0.7)" />
       <Rect x="52" y="53" width="22" height="4" rx="2" fill="rgba(255,255,255,0.55)" />
       <Rect x="15" y="68" width="70" height="10" rx="4" fill="rgba(0,0,0,0.2)" />
-      <Path d="M24 71 L24 75 M24 71 L27 71 L27 73 L24 73" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <Path d="M31 71 L31 75 L35 71 L35 75" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <Path d="M39 73 A3 3 0 1 1 45 73 A3 3 0 0 1 39 73 Z" stroke="white" strokeWidth="2" fill="none" />
     </Svg>
   );
 }
-
 function VoterLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#7C3AED" />
-      {/* Ballot box */}
       <Rect x="20" y="30" width="60" height="50" rx="6" fill="none" stroke="white" strokeWidth="3" />
       <Rect x="38" y="18" width="24" height="20" rx="4" fill="none" stroke="white" strokeWidth="3" />
       <Rect x="44" y="22" width="12" height="4" rx="2" fill="white" />
-      {/* Check mark */}
       <Path d="M33 52 L43 63 L67 40" stroke="white" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );
 }
-
 function PhilHealthLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#00853F" />
-      {/* Cross + heart */}
       <Path d="M42 20 L42 40 L22 40 L22 58 L42 58 L42 78 L58 78 L58 58 L78 58 L78 40 L58 40 L58 20 Z"
         fill="white" opacity="0.9" />
       <Path d="M50 52 C50 52 36 43 36 35 C36 29 42 26 50 35 C58 26 64 29 64 35 C64 43 50 52 50 52Z"
@@ -150,53 +111,42 @@ function PhilHealthLogo({ size = 44 }: { size?: number }) {
     </Svg>
   );
 }
-
 function TINLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#16A34A" />
       <Rect x="14" y="20" width="72" height="60" rx="8" fill="none" stroke="white" strokeWidth="2.5" />
-      {/* Document lines */}
       <Path d="M26 36 L74 36" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.9" />
       <Path d="M26 46 L60 46" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
       <Path d="M26 56 L68 56" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.7" />
-      <Path d="M26 66 L50 66" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.5" />
-      {/* BIR seal */}
       <Circle cx="68" cy="62" r="14" fill="#15803D" stroke="white" strokeWidth="2" />
       <Path d="M62 62 L66 66 L74 57" stroke="#FFD700" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );
 }
-
 function PostalLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#EA580C" />
-      {/* Envelope */}
       <Rect x="14" y="28" width="72" height="50" rx="6" fill="none" stroke="white" strokeWidth="3" />
       <Path d="M14 34 L50 58 L86 34" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      {/* Stamp */}
       <Rect x="62" y="16" width="24" height="24" rx="3" fill="white" />
       <Rect x="65" y="19" width="18" height="18" rx="2" fill="#EA580C" stroke="white" strokeWidth="1.5" strokeDasharray="3,2" />
       <Circle cx="74" cy="28" r="5" fill="white" opacity="0.8" />
     </Svg>
   );
 }
-
 function PRCLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Rect width="100" height="100" rx="16" fill="#BE185D" />
-      {/* Graduation cap */}
       <Path d="M50 22 L86 38 L50 54 L14 38 Z" fill="white" />
       <Path d="M50 54 L50 72" stroke="white" strokeWidth="4" strokeLinecap="round" />
-      <Path d="M30 46 L30 64 C30 64 40 72 50 72 C60 72 70 64 70 64 L70 46" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <Circle cx="80" cy="38" r="4" fill="white" />
-      <Path d="M80 42 L80 55 L76 60" stroke="white" strokeWidth="3" strokeLinecap="round" />
+      <Path d="M30 46 L30 64 C30 64 40 72 50 72 C60 72 70 64 70 64 L70 46"
+        stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );
 }
-
 function CustomIDLogo({ size = 44 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
@@ -209,19 +159,22 @@ function CustomIDLogo({ size = 44 }: { size?: number }) {
 }
 
 const ID_TEMPLATES = [
-  { name: 'PhilSys ID', Logo: PhilSysLogo, iconEmoji: '🪪', iconColor: '#0038A8', issuedBy: 'PSA Philippines' },
-  { name: "Driver's License", Logo: LTOLogo, iconEmoji: '🚗', iconColor: '#D32F2F', issuedBy: 'LTO Philippines' },
-  { name: 'SSS ID', Logo: SSSLogo, iconEmoji: '🏛️', iconColor: '#003087', issuedBy: 'Social Security System' },
-  { name: 'Passport', Logo: PassportLogo, iconEmoji: '📘', iconColor: '#0038A8', issuedBy: 'DFA Philippines' },
-  { name: 'UMID', Logo: UMIDLogo, iconEmoji: '🪪', iconColor: '#F59E0B', issuedBy: 'SSS / GSIS' },
-  { name: "Voter's ID", Logo: VoterLogo, iconEmoji: '🗳️', iconColor: '#7C3AED', issuedBy: 'COMELEC' },
-  { name: 'PhilHealth ID', Logo: PhilHealthLogo, iconEmoji: '🏥', iconColor: '#00853F', issuedBy: 'PhilHealth' },
-  { name: 'TIN ID', Logo: TINLogo, iconEmoji: '📋', iconColor: '#16A34A', issuedBy: 'BIR Philippines' },
-  { name: 'Postal ID', Logo: PostalLogo, iconEmoji: '📮', iconColor: '#EA580C', issuedBy: 'PhilPost' },
-  { name: 'PRC ID', Logo: PRCLogo, iconEmoji: '🎓', iconColor: '#BE185D', issuedBy: 'PRC Philippines' },
+  { name: 'PhilSys ID',       Logo: PhilSysLogo,    iconEmoji: '🪪', iconColor: '#0038A8', issuedBy: 'PSA Philippines' },
+  { name: "Driver's License", Logo: LTOLogo,         iconEmoji: '🚗', iconColor: '#D32F2F', issuedBy: 'LTO Philippines' },
+  { name: 'SSS ID',           Logo: SSSLogo,         iconEmoji: '🏛️', iconColor: '#003087', issuedBy: 'Social Security System' },
+  { name: 'Passport',         Logo: PassportLogo,   iconEmoji: '📘', iconColor: '#0038A8', issuedBy: 'DFA Philippines' },
+  { name: 'UMID',             Logo: UMIDLogo,        iconEmoji: '🪪', iconColor: '#F59E0B', issuedBy: 'SSS / GSIS' },
+  { name: "Voter's ID",       Logo: VoterLogo,       iconEmoji: '🗳️', iconColor: '#7C3AED', issuedBy: 'COMELEC' },
+  { name: 'PhilHealth ID',    Logo: PhilHealthLogo, iconEmoji: '🏥', iconColor: '#00853F', issuedBy: 'PhilHealth' },
+  { name: 'TIN ID',           Logo: TINLogo,         iconEmoji: '📋', iconColor: '#16A34A', issuedBy: 'BIR Philippines' },
+  { name: 'Postal ID',        Logo: PostalLogo,     iconEmoji: '📮', iconColor: '#EA580C', issuedBy: 'PhilPost' },
+  { name: 'PRC ID',           Logo: PRCLogo,         iconEmoji: '🎓', iconColor: '#BE185D', issuedBy: 'PRC Philippines' },
 ];
 
-const EMPTY_FORM = { name: '', cardNumber: '', expiryDate: '', issuedBy: '', iconEmoji: '🪪', iconColor: '#64748B', status: 'valid' as const };
+const EMPTY_FORM = {
+  name: '', cardNumber: '', expiryDate: '', issuedBy: '',
+  iconEmoji: '🪪', iconColor: '#64748B', status: 'valid' as const, notes: '',
+};
 
 const STATUS_CFG = {
   valid:    { label: 'Valid',    color: '#10B981', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.35)' },
@@ -237,17 +190,40 @@ export default function IDsScreen() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [chosenLogo, setChosenLogo] = useState<React.ComponentType<{size?: number}> | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [showCardNum, setShowCardNum] = useState(false);
 
-  useFocusEffect(useCallback(() => { loadIDs().then(setIds); }, []));
+  useFocusEffect(useCallback(() => {
+    loadIDs().then(setIds);
+    return () => { setSelected(null); setShowCardNum(false); };
+  }, []));
 
   const handleDelete = (id: string) => {
     Alert.alert('Remove ID', 'Remove this ID from your vault?', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Remove', style: 'destructive', onPress: async () => {
-        const updated = ids.filter((i) => i.id !== id);
+        const updated = ids.filter(i => i.id !== id);
         setIds(updated); await saveIDs(updated); setSelected(null);
       }},
     ]);
+  };
+
+  const openEdit = (id: StoredID) => {
+    setForm({
+      name: id.name,
+      cardNumber: id.cardNumber ?? '',
+      expiryDate: id.expiryDate,
+      issuedBy: id.issuedBy ?? '',
+      iconEmoji: id.iconEmoji,
+      iconColor: id.iconColor,
+      status: id.status,
+      notes: id.notes ?? '',
+    });
+    const tmpl = ID_TEMPLATES.find(t => t.iconColor === id.iconColor && t.issuedBy === id.issuedBy);
+    setChosenLogo(() => tmpl?.Logo ?? CustomIDLogo);
+    setEditingId(id.id);
+    setSelected(null);
+    setShowAddModal(true);
   };
 
   const handleSelectTemplate = (t: typeof ID_TEMPLATES[0]) => {
@@ -259,20 +235,38 @@ export default function IDsScreen() {
 
   const handleSave = async () => {
     if (!form.name.trim()) { Alert.alert('Required', 'Please enter an ID name.'); return; }
-    const newID: StoredID = {
-      id: Date.now().toString(),
-      name: form.name.trim(),
-      expiryDate: form.expiryDate,
-      expiryDisplay: form.expiryDate ? `Exp: ${form.expiryDate}` : 'No expiry',
-      status: form.status,
-      iconEmoji: form.iconEmoji,
-      iconColor: form.iconColor,
-      issuedBy: form.issuedBy.trim() || undefined,
-      cardNumber: form.cardNumber.trim() || undefined,
-    };
-    const updated = [...ids, newID];
-    setIds(updated); await saveIDs(updated);
-    setShowAddModal(false); setForm(EMPTY_FORM); setChosenLogo(null);
+    if (editingId) {
+      const updated = ids.map(i => i.id === editingId ? {
+        ...i,
+        name: form.name.trim(),
+        cardNumber: form.cardNumber.trim() || undefined,
+        expiryDate: form.expiryDate,
+        expiryDisplay: form.expiryDate ? `Exp: ${form.expiryDate}` : 'No expiry',
+        status: form.status,
+        issuedBy: form.issuedBy.trim() || undefined,
+        notes: form.notes.trim() || undefined,
+      } : i);
+      setIds(updated); await saveIDs(updated);
+    } else {
+      const newID: StoredID = {
+        id: Date.now().toString(),
+        name: form.name.trim(),
+        expiryDate: form.expiryDate,
+        expiryDisplay: form.expiryDate ? `Exp: ${form.expiryDate}` : 'No expiry',
+        status: form.status,
+        iconEmoji: form.iconEmoji,
+        iconColor: form.iconColor,
+        issuedBy: form.issuedBy.trim() || undefined,
+        cardNumber: form.cardNumber.trim() || undefined,
+        notes: form.notes.trim() || undefined,
+      };
+      const updated = [...ids, newID];
+      setIds(updated); await saveIDs(updated);
+    }
+    setShowAddModal(false);
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setChosenLogo(null);
   };
 
   const stats = [
@@ -282,7 +276,6 @@ export default function IDsScreen() {
     { label: 'Total',    value: ids.length, color: '#fff', bg: 'rgba(255,255,255,0.12)', border: 'rgba(255,255,255,0.2)' },
   ];
 
-  // Find template logo for detail view
   const selectedTemplate = selected
     ? ID_TEMPLATES.find(t => t.iconColor === selected.iconColor && t.issuedBy === selected.issuedBy)
     : null;
@@ -293,7 +286,7 @@ export default function IDsScreen() {
 
       {/* ── Hero ── */}
       <LinearGradient
-        colors={isDark ? ['#060E08', '#0A1A0D'] : ['#0B5C2A', '#16783C']}
+        colors={isDark ? ['#060E08','#0A1A0D'] : ['#0B5C2A','#16783C']}
         start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
         style={styles.hero}
       >
@@ -309,7 +302,7 @@ export default function IDsScreen() {
           </TouchableOpacity>
         </View>
         <View style={styles.heroStats}>
-          {stats.map((s) => (
+          {stats.map(s => (
             <View key={s.label} style={[styles.statChip, { backgroundColor: s.bg, borderColor: s.border }]}>
               <Text style={[styles.statChipVal, { color: s.color }]}>{s.value}</Text>
               <Text style={styles.statChipLbl}>{s.label}</Text>
@@ -338,7 +331,45 @@ export default function IDsScreen() {
             </TouchableOpacity>
           </View>
         ) : (
-          ids.map((id) => <IDCardItem key={id.id} item={id} onPress={() => setSelected(id)} />)
+          <>
+            {ids.map(id => {
+              const cfg = STATUS_CFG[id.status];
+              const tmpl = ID_TEMPLATES.find(t => t.iconColor === id.iconColor && t.issuedBy === id.issuedBy);
+              const Logo = tmpl?.Logo ?? CustomIDLogo;
+              return (
+                <TouchableOpacity
+                  key={id.id}
+                  activeOpacity={0.85}
+                  onPress={() => { setSelected(id); setShowCardNum(false); }}
+                  onLongPress={() => openEdit(id)}
+                  delayLongPress={400}
+                  style={[styles.card, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}
+                >
+                  <View style={[styles.accentBar, { backgroundColor: id.iconColor }]} />
+                  <View style={styles.cardLogoWrap}><Logo size={44} /></View>
+                  <View style={styles.cardInfo}>
+                    <Text style={[styles.cardName, { color: theme.textPrimary }]} numberOfLines={1}>{id.name}</Text>
+                    {id.issuedBy && <Text style={[styles.cardIssuer, { color: theme.textMuted }]} numberOfLines={1}>{id.issuedBy}</Text>}
+                    <Text style={[styles.cardExpiry, { color: theme.textMuted }]}>{id.expiryDisplay}</Text>
+                  </View>
+                  <View style={{ alignItems: 'flex-end', gap: 6, marginRight: 14 }}>
+                    <View style={[styles.badge, { backgroundColor: cfg.bg }]}>
+                      <View style={[styles.dot, { backgroundColor: cfg.color }]} />
+                      <Text style={[styles.badgeText, { color: cfg.color }]}>{cfg.label}</Text>
+                    </View>
+                    <View style={[styles.tapHint, { backgroundColor: theme.surfaceElevated }]}>
+                      <Ionicons name="eye-outline" size={10} color={theme.textMuted} />
+                      <Text style={[styles.tapHintText, { color: theme.textMuted }]}>Tap</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+            <View style={[styles.infoBox, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}>
+              <Ionicons name="information-circle-outline" size={15} color={theme.textMuted} />
+              <Text style={[styles.infoText, { color: theme.textMuted }]}>Tap to view details · Long press to edit</Text>
+            </View>
+          </>
         )}
         <View style={{ height: 48 }} />
       </ScrollView>
@@ -358,7 +389,7 @@ export default function IDsScreen() {
               </TouchableOpacity>
             </View>
             <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 400 }}>
-              {ID_TEMPLATES.map((t) => (
+              {ID_TEMPLATES.map(t => (
                 <TouchableOpacity
                   key={t.name}
                   style={[styles.templateRow, { borderBottomColor: theme.borderSubtle }]}
@@ -394,8 +425,8 @@ export default function IDsScreen() {
         </View>
       </Modal>
 
-      {/* ── Add ID Form ── */}
-      <Modal visible={showAddModal} transparent animationType="slide" onRequestClose={() => setShowAddModal(false)}>
+      {/* ── Add / Edit Form ── */}
+      <Modal visible={showAddModal} transparent animationType="slide" onRequestClose={() => { setShowAddModal(false); setEditingId(null); }}>
         <View style={styles.overlay}>
           <View style={[styles.sheet, { backgroundColor: theme.surface, borderColor: theme.border }]}>
             <View style={styles.handleRow}><View style={[styles.handle, { backgroundColor: theme.border }]} /></View>
@@ -403,52 +434,61 @@ export default function IDsScreen() {
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 }}>
                 {chosenLogo ? React.createElement(chosenLogo, { size: 44 }) : <CustomIDLogo size={44} />}
                 <View>
-                  <Text style={[styles.sheetTitle, { color: theme.textPrimary }]}>Add {form.name || 'ID'}</Text>
-                  <Text style={[styles.sheetSub, { color: theme.textMuted }]}>Fill in your ID details</Text>
+                  <Text style={[styles.sheetTitle, { color: theme.textPrimary }]}>
+                    {editingId ? `Edit ${form.name}` : `Add ${form.name || 'ID'}`}
+                  </Text>
+                  <Text style={[styles.sheetSub, { color: theme.textMuted }]}>
+                    {editingId ? 'Update your ID details' : 'Fill in your ID details'}
+                  </Text>
                 </View>
               </View>
-              <TouchableOpacity style={[styles.closeBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => setShowAddModal(false)}>
+              <TouchableOpacity style={[styles.closeBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => { setShowAddModal(false); setEditingId(null); }}>
                 <Ionicons name="close" size={18} color={theme.textSecondary} />
               </TouchableOpacity>
             </View>
-            <View style={[styles.formCard, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}>
-              {[
-                { label: 'ID Name *', key: 'name', placeholder: 'e.g. PhilSys ID' },
-                { label: 'Card Number', key: 'cardNumber', placeholder: 'Optional' },
-                { label: 'Expiry Date', key: 'expiryDate', placeholder: 'e.g. Dec 2030' },
-                { label: 'Issued By', key: 'issuedBy', placeholder: 'e.g. PSA Philippines' },
-              ].map((f, i, arr) => (
-                <View key={f.key} style={[styles.formRow, { borderBottomWidth: i < arr.length - 1 ? 1 : 0, borderBottomColor: theme.borderSubtle }]}>
-                  <Text style={[styles.formLabel, { color: theme.textMuted }]}>{f.label}</Text>
-                  <TextInput
-                    style={[styles.formInput, { color: theme.textPrimary }]}
-                    value={(form as any)[f.key]}
-                    onChangeText={(v) => setForm(p => ({ ...p, [f.key]: v }))}
-                    placeholder={f.placeholder}
-                    placeholderTextColor={theme.textMuted}
-                  />
-                </View>
-              ))}
-              <View style={[styles.formRow, { borderBottomWidth: 0 }]}>
-                <Text style={[styles.formLabel, { color: theme.textMuted }]}>Status</Text>
-                <View style={{ flexDirection: 'row', gap: 6 }}>
-                  {(['valid','expiring','expired'] as const).map((s) => {
-                    const cfg = STATUS_CFG[s]; const active = form.status === s;
-                    return (
-                      <TouchableOpacity key={s}
-                        style={[styles.statusChip, active ? { backgroundColor: cfg.bg, borderColor: cfg.color } : { backgroundColor: 'transparent', borderColor: theme.border }]}
-                        onPress={() => setForm(p => ({ ...p, status: s }))}
-                      >
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: active ? cfg.color : theme.textMuted }}>{cfg.label}</Text>
-                      </TouchableOpacity>
-                    );
-                  })}
+            <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 380 }}>
+              <View style={[styles.formCard, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}>
+                {[
+                  { label: 'ID Name *',    key: 'name',       placeholder: 'e.g. PhilSys ID' },
+                  { label: 'Card Number',  key: 'cardNumber', placeholder: 'Optional' },
+                  { label: 'Expiry Date',  key: 'expiryDate', placeholder: 'e.g. Dec 2030' },
+                  { label: 'Issued By',    key: 'issuedBy',   placeholder: 'e.g. PSA Philippines' },
+                  { label: 'Notes',        key: 'notes',      placeholder: 'Optional notes' },
+                ].map((f, i, arr) => (
+                  <View key={f.key} style={[styles.formRow, { borderBottomWidth: i < arr.length - 1 ? 1 : 0, borderBottomColor: theme.borderSubtle }]}>
+                    <Text style={[styles.formLabel, { color: theme.textMuted }]}>{f.label}</Text>
+                    <TextInput
+                      style={[styles.formInput, { color: theme.textPrimary }]}
+                      value={(form as any)[f.key]}
+                      onChangeText={v => setForm(p => ({ ...p, [f.key]: v }))}
+                      placeholder={f.placeholder}
+                      placeholderTextColor={theme.textMuted}
+                    />
+                  </View>
+                ))}
+                <View style={[styles.formRow, { borderBottomWidth: 0 }]}>
+                  <Text style={[styles.formLabel, { color: theme.textMuted }]}>Status</Text>
+                  <View style={{ flexDirection: 'row', gap: 6 }}>
+                    {(['valid','expiring','expired'] as const).map(s => {
+                      const cfg = STATUS_CFG[s]; const active = form.status === s;
+                      return (
+                        <TouchableOpacity key={s}
+                          style={[styles.statusChip, active ? { backgroundColor: cfg.bg, borderColor: cfg.color } : { backgroundColor: 'transparent', borderColor: theme.border }]}
+                          onPress={() => setForm(p => ({ ...p, status: s }))}
+                        >
+                          <Text style={{ fontSize: 11, fontWeight: '700', color: active ? cfg.color : theme.textMuted }}>{cfg.label}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                 </View>
               </View>
-            </View>
+            </ScrollView>
             <TouchableOpacity style={[styles.saveBtn, { backgroundColor: theme.primary }]} onPress={handleSave} activeOpacity={0.85}>
-              <Ionicons name="save-outline" size={18} color={theme.textInverse} />
-              <Text style={[styles.saveBtnText, { color: theme.textInverse }]}>Save to Vault</Text>
+              <Ionicons name={editingId ? 'checkmark-circle-outline' : 'save-outline'} size={18} color={theme.textInverse} />
+              <Text style={[styles.saveBtnText, { color: theme.textInverse }]}>
+                {editingId ? 'Save Changes' : 'Save to Vault'}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -463,7 +503,6 @@ export default function IDsScreen() {
               return (
                 <>
                   <View style={styles.handleRow}><View style={[styles.handle, { backgroundColor: theme.border }]} /></View>
-                  {/* ID Card Preview */}
                   <LinearGradient
                     colors={[selected.iconColor, selected.iconColor + '99']}
                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
@@ -471,44 +510,71 @@ export default function IDsScreen() {
                   >
                     <View style={styles.idPreviewTop}>
                       <SelectedLogo size={52} />
-                      <View style={[styles.statusBadge, { backgroundColor: cfg.bg, borderColor: cfg.color }]}>
+                      <View style={[styles.badge, { backgroundColor: cfg.bg, borderColor: cfg.color, borderWidth: 1 }]}>
+                        <View style={[styles.dot, { backgroundColor: cfg.color }]} />
                         <Text style={{ fontSize: 10, fontWeight: '800', color: cfg.color }}>{cfg.label}</Text>
                       </View>
                     </View>
                     <Text style={styles.idPreviewName}>{selected.name}</Text>
                     {selected.issuedBy && <Text style={styles.idPreviewIssuer}>{selected.issuedBy}</Text>}
                     {selected.cardNumber && (
-                      <Text style={styles.idPreviewNum}>•••• {selected.cardNumber.slice(-4)}</Text>
+                      <Text style={styles.idPreviewNum}>
+                        {showCardNum ? selected.cardNumber : '•••• ' + selected.cardNumber.slice(-4)}
+                      </Text>
                     )}
                   </LinearGradient>
 
-                  {/* Info rows */}
-                  <View style={[styles.formCard, { backgroundColor: theme.surfaceCard, borderColor: theme.border, marginBottom: 12 }]}>
+                  <View style={[styles.formCard, { backgroundColor: theme.surfaceCard, borderColor: theme.border, marginBottom: 10 }]}>
                     {selected.cardNumber && (
                       <View style={[styles.formRow, { borderBottomColor: theme.borderSubtle }]}>
                         <Text style={[styles.formLabel, { color: theme.textMuted }]}>Card No.</Text>
-                        <Text style={[styles.detailVal, { color: theme.textPrimary }]}>{selected.cardNumber}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={[styles.detailVal, { color: theme.textPrimary }]}>
+                            {showCardNum ? selected.cardNumber : '•••• ' + selected.cardNumber.slice(-4)}
+                          </Text>
+                          <TouchableOpacity onPress={() => setShowCardNum(v => !v)}>
+                            <Ionicons name={showCardNum ? 'eye-off-outline' : 'eye-outline'} size={16} color={theme.primary} />
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     )}
                     <View style={[styles.formRow, { borderBottomColor: theme.borderSubtle }]}>
                       <Text style={[styles.formLabel, { color: theme.textMuted }]}>Expiry</Text>
                       <Text style={[styles.detailVal, { color: theme.textPrimary }]}>{selected.expiryDisplay}</Text>
                     </View>
-                    <View style={[styles.formRow, { borderBottomWidth: 0 }]}>
+                    <View style={[styles.formRow, { borderBottomColor: theme.borderSubtle, borderBottomWidth: selected.notes ? 1 : 0 }]}>
                       <Text style={[styles.formLabel, { color: theme.textMuted }]}>Status</Text>
-                      <View style={[styles.statusBadge, { backgroundColor: cfg.bg, borderColor: cfg.color }]}>
+                      <View style={[styles.badge, { backgroundColor: cfg.bg }]}>
+                        <View style={[styles.dot, { backgroundColor: cfg.color }]} />
                         <Text style={{ fontSize: 11, fontWeight: '800', color: cfg.color }}>{cfg.label}</Text>
                       </View>
                     </View>
+                    {selected.notes && (
+                      <View style={[styles.formRow, { borderBottomWidth: 0 }]}>
+                        <Text style={[styles.formLabel, { color: theme.textMuted }]}>Notes</Text>
+                        <Text style={[styles.detailVal, { color: theme.textPrimary, textAlign: 'right', flex: 1, marginLeft: 12 }]}>{selected.notes}</Text>
+                      </View>
+                    )}
                   </View>
 
-                  <TouchableOpacity
-                    style={[styles.deleteBtn, { borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.07)' }]}
-                    onPress={() => handleDelete(selected.id)} activeOpacity={0.75}
-                  >
-                    <Ionicons name="trash-outline" size={16} color="#EF4444" />
-                    <Text style={{ fontSize: 14, fontWeight: '700', color: '#EF4444' }}>Remove from Vault</Text>
-                  </TouchableOpacity>
+                  <View style={styles.actionRow}>
+                    <TouchableOpacity
+                      style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, flex: 1 }]}
+                      onPress={() => openEdit(selected)}
+                      activeOpacity={0.8}
+                    >
+                      <Ionicons name="pencil-outline" size={16} color={theme.primary} />
+                      <Text style={[styles.actionBtnText, { color: theme.primary }]}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.actionBtn, { backgroundColor: 'rgba(239,68,68,0.09)', borderColor: '#EF4444', flex: 1 }]}
+                      onPress={() => handleDelete(selected.id)}
+                      activeOpacity={0.8}
+                    >
+                      <Ionicons name="trash-outline" size={16} color="#EF4444" />
+                      <Text style={[styles.actionBtnText, { color: '#EF4444' }]}>Remove</Text>
+                    </TouchableOpacity>
+                  </View>
                   <TouchableOpacity style={[styles.closeRowBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => setSelected(null)}>
                     <Text style={{ fontSize: 14, fontWeight: '600', color: theme.textSecondary }}>Close</Text>
                   </TouchableOpacity>
@@ -547,6 +613,20 @@ const styles = StyleSheet.create({
   emptySub: { fontSize: 13, textAlign: 'center', maxWidth: 280, lineHeight: 20 },
   emptyBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: Spacing.xl, paddingVertical: 13, borderRadius: 24, marginTop: 6 },
   emptyBtnText: { fontSize: 14, fontWeight: '800' },
+  card: { flexDirection: 'row', alignItems: 'center', borderRadius: BorderRadius.xl, borderWidth: 1, marginBottom: 10, overflow: 'hidden' },
+  accentBar: { width: 4, alignSelf: 'stretch' },
+  cardLogoWrap: { paddingVertical: 14, paddingLeft: 14, paddingRight: 12 },
+  cardInfo: { flex: 1, gap: 3, paddingVertical: 14 },
+  cardName: { fontSize: 14, fontWeight: '700', letterSpacing: -0.1 },
+  cardIssuer: { fontSize: 11, letterSpacing: 0.1 },
+  cardExpiry: { fontSize: 11 },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20 },
+  dot: { width: 5, height: 5, borderRadius: 3 },
+  badgeText: { fontSize: 10, fontWeight: '800', letterSpacing: 0.2 },
+  tapHint: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 7, paddingVertical: 3, borderRadius: 10 },
+  tapHintText: { fontSize: 9, fontWeight: '600' },
+  infoBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 12, borderRadius: BorderRadius.md, borderWidth: 1, marginTop: 4 },
+  infoText: { fontSize: 12 },
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.65)' },
   sheet: { borderTopLeftRadius: BorderRadius.xxl, borderTopRightRadius: BorderRadius.xxl, borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, padding: Spacing.xl, paddingBottom: 44 },
   handleRow: { alignItems: 'center', marginBottom: Spacing.lg },
@@ -572,7 +652,8 @@ const styles = StyleSheet.create({
   idPreviewName: { fontSize: 22, fontWeight: '800', color: '#fff', letterSpacing: -0.3 },
   idPreviewIssuer: { fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 2, fontWeight: '500' },
   idPreviewNum: { fontSize: 14, color: 'rgba(255,255,255,0.9)', marginTop: 8, fontWeight: '700', letterSpacing: 2 },
-  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 24, borderWidth: 1 },
-  deleteBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 14, borderRadius: BorderRadius.lg, borderWidth: 1.5, marginBottom: 8 },
+  actionRow: { flexDirection: 'row', gap: 10, marginBottom: 8 },
+  actionBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 13, borderRadius: BorderRadius.lg, borderWidth: 1 },
+  actionBtnText: { fontSize: 14, fontWeight: '700' },
   closeRowBtn: { alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: BorderRadius.lg },
 });
