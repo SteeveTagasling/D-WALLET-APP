@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Platform } from 'react-native';
 import Svg, { Path, Rect, Circle, G, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
-import { ThemeProvider, useTheme } from '../constants/ThemeContext';
+import { useTheme } from '../../constants/ThemeContext';
 
 // ── D-Wallet logo mark for Home tab ───────────────────────────────────────
 function DWalletNavLogo({ active, color }: { active: boolean; color: string }) {
@@ -104,12 +104,13 @@ function TabLayout() {
           headerShown: false,
           tabBarStyle: {
             backgroundColor: theme.tabBarBg,
-            borderTopWidth: 0,
-            elevation: 28,
+            borderTopWidth: 1,
+            borderTopColor: theme.border,
+            elevation: 0,
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: -6 },
-            shadowOpacity: isDark ? 0.55 : 0.1,
-            shadowRadius: 20,
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: isDark ? 0.3 : 0.06,
+            shadowRadius: 10,
             paddingBottom: Platform.OS === 'ios' ? 26 : 12,
             paddingTop: 10,
             height: Platform.OS === 'ios' ? 86 : 70,
@@ -118,9 +119,9 @@ function TabLayout() {
           tabBarInactiveTintColor: theme.tabBarInactive,
           tabBarLabelStyle: {
             fontSize: 10,
-            fontWeight: '700',
-            letterSpacing: 0.5,
-            marginTop: 1,
+            fontWeight: '600',
+            letterSpacing: 0.3,
+            marginTop: 2,
           },
         }}
       >
@@ -189,10 +190,4 @@ const styles = StyleSheet.create({
   activeWrap: { width: 52, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15 },
 });
 
-export default function RootLayout() {
-  return (
-    <ThemeProvider>
-      <TabLayout />
-    </ThemeProvider>
-  );
-}
+export default TabLayout;

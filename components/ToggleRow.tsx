@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Switch, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../constants/ThemeContext';
-import { BorderRadius, Spacing, Typography } from '../constants/colors';
+import { BorderRadius, Spacing } from '../constants/colors';
 
 interface Props {
   label: string;
@@ -18,6 +18,7 @@ interface Props {
 export default function ToggleRow({ label, description, iconName, value, onToggle, onPress, showChevron, destructive }: Props) {
   const { theme } = useTheme();
   const labelColor = destructive ? theme.error : theme.textPrimary;
+  const iconColor = destructive ? theme.error : theme.primary;
 
   return (
     <TouchableOpacity
@@ -27,8 +28,8 @@ export default function ToggleRow({ label, description, iconName, value, onToggl
     >
       <View style={styles.left}>
         {iconName && (
-          <View style={[styles.iconCircle, { backgroundColor: theme.surfaceElevated }]}>
-            <Ionicons name={iconName} size={18} color={destructive ? theme.error : theme.primary} />
+          <View style={[styles.iconWrap, { backgroundColor: destructive ? 'rgba(255,90,90,0.1)' : theme.primaryMuted }]}>
+            <Ionicons name={iconName} size={17} color={iconColor} />
           </View>
         )}
         <View style={styles.textBlock}>
@@ -44,6 +45,7 @@ export default function ToggleRow({ label, description, iconName, value, onToggl
           onValueChange={onToggle}
           trackColor={{ false: theme.borderSubtle, true: theme.primaryMuted }}
           thumbColor={value ? theme.primary : theme.textMuted}
+          ios_backgroundColor={theme.borderSubtle}
         />
       ) : showChevron ? (
         <Ionicons name="chevron-forward" size={16} color={theme.textMuted} />
@@ -57,11 +59,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: Spacing.lg,
+    paddingVertical: 15,
     borderBottomWidth: 1,
   },
   left: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md, flex: 1, marginRight: Spacing.sm },
-  iconCircle: {
+  iconWrap: {
     width: 34,
     height: 34,
     borderRadius: BorderRadius.sm,
@@ -69,6 +71,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textBlock: { flex: 1 },
-  label: { ...Typography.bodyMedium, fontWeight: '500' },
-  description: { ...Typography.caption, marginTop: 2 },
+  label: { fontSize: 14, fontWeight: '500' },
+  description: { fontSize: 11, marginTop: 2 },
 });

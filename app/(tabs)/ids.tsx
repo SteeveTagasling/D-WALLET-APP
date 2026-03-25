@@ -7,11 +7,11 @@ import Svg, { Path, Rect, Circle, G, Defs, LinearGradient as SvgGradient, Stop }
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
-import { useTheme } from '../constants/ThemeContext';
-import { BorderRadius, Spacing } from '../constants/colors';
-import IDCardItem from '../components/IDCardItem';
-import { loadIDs, saveIDs } from '../constants/storage';
-import type { StoredID } from '../constants/types';
+import { useTheme } from '../../constants/ThemeContext';
+import { BorderRadius, Spacing } from '../../constants/colors';
+import IDCardItem from '../../components/IDCardItem';
+import { loadIDs, saveIDs } from '../../constants/storage';
+import type { StoredID } from '../../constants/types';
 
 // ── Official-style ID logos ────────────────────────────────────────────────
 
@@ -293,7 +293,7 @@ export default function IDsScreen() {
 
       {/* ── Hero ── */}
       <LinearGradient
-        colors={isDark ? ['#061510','#0D2818','#112B1C'] : ['#0A4520','#1A7A3C','#0D5C2A']}
+        colors={isDark ? ['#060E08', '#0A1A0D'] : ['#0B5C2A', '#16783C']}
         start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
         style={styles.hero}
       >
@@ -524,7 +524,7 @@ export default function IDsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  hero: { paddingHorizontal: Spacing.xl, paddingTop: 52, paddingBottom: Spacing.xl },
+  hero: { paddingHorizontal: Spacing.xl, paddingTop: 54, paddingBottom: Spacing.xl },
   heroTop: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: Spacing.xl },
   heroEyebrow: { fontSize: 9, color: 'rgba(255,255,255,0.5)', letterSpacing: 2.5, fontWeight: '700', marginBottom: 2 },
   heroTitle: { fontSize: 30, fontWeight: '800', color: '#fff', letterSpacing: -0.5 },
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
   statChipVal: { fontSize: 20, fontWeight: '800' },
   statChipLbl: { fontSize: 8, color: 'rgba(255,255,255,0.55)', fontWeight: '600', letterSpacing: 0.4 },
   list: { padding: Spacing.xl, paddingBottom: Spacing.xxxl },
-  emptyState: { alignItems: 'center', paddingTop: 52, gap: 12 },
+  emptyState: { alignItems: 'center', paddingTop: 54, gap: 12 },
   emptyIconWrap: { width: 90, height: 90, borderRadius: 26, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderStyle: 'dashed', marginBottom: 8 },
   emptyTitle: { fontSize: 18, fontWeight: '700' },
   emptySub: { fontSize: 13, textAlign: 'center', maxWidth: 280, lineHeight: 20 },
