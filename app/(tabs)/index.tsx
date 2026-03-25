@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  SafeAreaView, ActivityIndicator,
+  SafeAreaView, ActivityIndicator, Modal,
 } from 'react-native';
-import Svg, { Path, Rect, Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
+import Svg, { Rect, Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect } from 'expo-router';
@@ -12,7 +12,9 @@ import { BorderRadius, Spacing } from '../../constants/colors';
 import PaymentAccountCard from '../../components/PaymentAccountCard';
 import IDCardItem from '../../components/IDCardItem';
 import { loadIDs, loadAccounts, loadUser } from '../../constants/storage';
+import { getExpiringIDs, getExpiryMessage } from '../../constants/notifications';
 import type { StoredID, PaymentAccount, UserProfile } from '../../constants/types';
+import type { ExpiryWarning } from '../../constants/notifications';
 
 function DWalletMark({ size = 40 }: { size?: number }) {
   return (
@@ -39,12 +41,130 @@ const QUICK_ACTIONS = [
   { id: 'profile', label: 'Profile', icon: 'person-outline' as const, route: '/profile', color: '#FF9F0A', bg: 'rgba(255,159,10,0.12)' },
 ];
 
+// ── Expiry Alert Modal ──────────────────────────────────────────────
+function ExpiryModal({ warnings, onClose }: { warnings: ExpiryWarning[]; onClose: () => void }) {
+  const { theme } = useTheme();
+  return (
+    <Modal visible transparent animationType="fade" onRequestClose={onClose}>
+      <View style={modalStyles.overlay}>
+        <View style={[modalStyles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          {/* Header */}
+          <View style={modalStyles.header}>
+            <View style={modalStyles.iconWrap}>
+              <Text style={{ fontSize: 28 }}>⚠️</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={[modalStyles.title, { color: theme.textPrimary }]}>
+                {warnings.length === 1 ? 'ID Expiring Soon' : `${warnings.length} IDs Expiring Soon`}
+              </Text>
+              <Text style={[modalStyles.subtitle, { color: theme.textMuted }]}>
+                Please renew before they expire
+              </Text>
+            </View>
+          </View>
+
+          {/* ID list */}
+          <View style={[modalStyles.list, { borderColor: theme.border }]}>
+            {warnings.map((w, i) => (
+              <View
+                key={w.id}
+                style={[
+                  modalStyles.row,
+                  { borderBottomWidth: i < warnings.length - 1 ? 1 : 0, borderBottomColor: theme.borderSubtle },
+                ]}
+              >
+                <Text style={{ fontSize: 22 }}>{w.emoji}</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[modalStyles.idName, { color: theme.textPrimary }]}>{w.name}</Text>
+                  <Text style={[modalStyles.idDays, { color: w.days === 0 ? '#EF4444' : w.days <= 7 ? '#F59E0B' : '#F97316' }]}>
+                    {getExpiryMessage(w.days)}
+                  </Text>
+                </View>
+                {w.days === 0 && (
+                  <View style={modalStyles.urgentBadge}>
+                    <Text style={modalStyles.urgentText}>URGENT</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+
+          {/* Buttons */}
+          <View style={modalStyles.btnRow}>
+            <TouchableOpacity
+              style={[modalStyles.dismissBtn, { backgroundColor: theme.surfaceElevated }]}
+              onPress={onClose}
+              activeOpacity={0.8}
+            >
+              <Text style={[modalStyles.dismissText, { color: theme.textSecondary }]}>Dismiss</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[modalStyles.viewBtn, { backgroundColor: theme.primary }]}
+              onPress={() => { onClose(); router.push('/ids'); }}
+              activeOpacity={0.85}
+            >
+              <Ionicons name="id-card-outline" size={15} color="#fff" />
+              <Text style={modalStyles.viewText}>View IDs</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+const modalStyles = StyleSheet.create({
+  overlay: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center', alignItems: 'center', padding: 24,
+  },
+  card: {
+    width: '100%', borderRadius: 24, borderWidth: 1,
+    padding: 20, gap: 16,
+  },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  iconWrap: {
+    width: 52, height: 52, borderRadius: 16,
+    backgroundColor: 'rgba(245,158,11,0.15)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  title: { fontSize: 18, fontWeight: '800' },
+  subtitle: { fontSize: 12, marginTop: 2 },
+  list: { borderRadius: 14, borderWidth: 1, overflow: 'hidden' },
+  row: {
+    flexDirection: 'row', alignItems: 'center', gap: 12,
+    paddingVertical: 14, paddingHorizontal: 14,
+  },
+  idName: { fontSize: 14, fontWeight: '700' },
+  idDays: { fontSize: 12, fontWeight: '600', marginTop: 2 },
+  urgentBadge: {
+    backgroundColor: '#EF4444', paddingHorizontal: 8,
+    paddingVertical: 3, borderRadius: 20,
+  },
+  urgentText: { fontSize: 9, fontWeight: '800', color: '#fff', letterSpacing: 0.5 },
+  btnRow: { flexDirection: 'row', gap: 10 },
+  dismissBtn: {
+    flex: 1, paddingVertical: 13, borderRadius: 14,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  dismissText: { fontSize: 14, fontWeight: '600' },
+  viewBtn: {
+    flex: 2, paddingVertical: 13, borderRadius: 14,
+    alignItems: 'center', justifyContent: 'center',
+    flexDirection: 'row', gap: 6,
+  },
+  viewText: { fontSize: 14, fontWeight: '800', color: '#fff' },
+});
+
+// ── Home Screen ─────────────────────────────────────────────────────
 export default function HomeScreen() {
   const { theme, isDark } = useTheme();
   const [ids, setIds] = useState<StoredID[]>([]);
   const [accounts, setAccounts] = useState<PaymentAccount[]>([]);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [expiryWarnings, setExpiryWarnings] = useState<ExpiryWarning[]>([]);
+  const [showExpiryModal, setShowExpiryModal] = useState(false);
 
   const loadData = useCallback(async () => {
     const [loadedIDs, loadedAccounts, loadedUser] = await Promise.all([
@@ -54,6 +174,13 @@ export default function HomeScreen() {
     setAccounts(loadedAccounts);
     setUser(loadedUser);
     setLoading(false);
+
+    // Check for expiring IDs and show modal
+    const warnings = getExpiringIDs(loadedIDs);
+    if (warnings.length > 0) {
+      setExpiryWarnings(warnings);
+      setShowExpiryModal(true);
+    }
   }, []);
 
   useFocusEffect(useCallback(() => { loadData(); }, [loadData]));
@@ -70,13 +197,21 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.background }]}>
+
+      {/* Expiry Modal */}
+      {showExpiryModal && (
+        <ExpiryModal
+          warnings={expiryWarnings}
+          onClose={() => setShowExpiryModal(false)}
+        />
+      )}
+
       {/* ── Hero ── */}
       <LinearGradient
         colors={isDark ? ['#060E08', '#0A1A0D', '#0D2214'] : ['#0B5C2A', '#16783C', '#1A9B50']}
         start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
         style={styles.hero}
       >
-        {/* Top Bar */}
         <View style={styles.topBar}>
           <View style={styles.brandRow}>
             <DWalletMark size={40} />
@@ -94,13 +229,11 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Greeting */}
         <View style={styles.greetBlock}>
           <Text style={styles.greetSub}>GOOD DAY</Text>
           <Text style={styles.greetName}>{user?.firstName ?? 'User'} 👋</Text>
         </View>
 
-        {/* Stat Pills */}
         <View style={styles.statsRow}>
           {[
             { value: ids.length, label: 'IDs Stored', icon: 'id-card-outline' as const },
@@ -115,11 +248,15 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {expiringCount > 0 && (
-          <View style={styles.alertRow}>
+        {/* Tap to re-open expiry modal if there are warnings */}
+        {expiryWarnings.length > 0 && (
+          <TouchableOpacity style={styles.alertRow} onPress={() => setShowExpiryModal(true)} activeOpacity={0.8}>
             <Ionicons name="alert-circle" size={13} color="#F5A623" />
-            <Text style={styles.alertText}>{expiringCount} ID{expiringCount > 1 ? 's' : ''} expiring soon</Text>
-          </View>
+            <Text style={styles.alertText}>
+              {expiryWarnings.length} ID{expiryWarnings.length > 1 ? 's' : ''} expiring soon — tap to view
+            </Text>
+            <Ionicons name="chevron-forward" size={12} color="#F5A623" />
+          </TouchableOpacity>
         )}
       </LinearGradient>
 
@@ -222,8 +359,7 @@ const styles = StyleSheet.create({
   avatarBtn: {
     width: 42, height: 42, borderRadius: 21,
     backgroundColor: 'rgba(255,255,255,0.12)',
-    borderWidth: 1.5,
-    alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1.5, alignItems: 'center', justifyContent: 'center',
   },
   avatarText: { fontSize: 15, fontWeight: '800', color: '#fff' },
   greetBlock: { marginBottom: 20 },
@@ -244,7 +380,7 @@ const styles = StyleSheet.create({
     borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8,
     borderWidth: 1, borderColor: 'rgba(245,166,35,0.3)',
   },
-  alertText: { fontSize: 12, color: '#F5A623', fontWeight: '600' },
+  alertText: { fontSize: 12, color: '#F5A623', fontWeight: '600', flex: 1 },
   section: { paddingHorizontal: Spacing.xl, marginBottom: Spacing.xxl },
   sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
   sectionTitle: { fontSize: 17, fontWeight: '700', letterSpacing: -0.2 },
@@ -253,8 +389,7 @@ const styles = StyleSheet.create({
   quickGrid: { flexDirection: 'row', gap: 10 },
   quickCard: {
     flex: 1, alignItems: 'center', justifyContent: 'center',
-    paddingVertical: 18, borderRadius: BorderRadius.xl,
-    borderWidth: 1, gap: 10,
+    paddingVertical: 18, borderRadius: BorderRadius.xl, borderWidth: 1, gap: 10,
   },
   quickIconCircle: { width: 46, height: 46, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   quickLabel: { fontSize: 11, fontWeight: '600', letterSpacing: 0.1 },

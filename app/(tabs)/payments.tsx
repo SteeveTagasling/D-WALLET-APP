@@ -27,6 +27,46 @@ const ACCOUNT_TEMPLATES = [
 
 const EMPTY_FORM = { name: '', phoneNumber: '', accountNumber: '', pin: '', balance: '', initial: '', bgColor: '#3B5BDB', color: '#FFFFFF', notes: '' };
 
+const FORM_FIELDS = [
+  { label: 'Account Name',   key: 'name',          placeholder: 'e.g. GCash',              keyboard: 'default' },
+  { label: 'Phone / Mobile', key: 'phoneNumber',   placeholder: '09XX XXX XXXX',           keyboard: 'phone-pad' },
+  { label: 'Account Number', key: 'accountNumber', placeholder: 'Optional',                keyboard: 'default' },
+  { label: 'PIN',            key: 'pin',           placeholder: 'Optional (stored locally)',keyboard: 'number-pad' },
+  { label: 'Notes',          key: 'notes',         placeholder: 'Optional',                keyboard: 'default' },
+] as const;
+
+function FormFields({
+  fv, setFv, theme,
+}: {
+  fv: typeof EMPTY_FORM;
+  setFv: (f: typeof EMPTY_FORM) => void;
+  theme: any;
+}) {
+  return (
+    <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 360 }}>
+      <View style={[styles.formCard, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}>
+        {FORM_FIELDS.map((field, i, arr) => (
+          <View
+            key={field.key}
+            style={[styles.formRow, { borderBottomWidth: i < arr.length - 1 ? 1 : 0, borderBottomColor: theme.borderSubtle }]}
+          >
+            <Text style={[styles.formLabel, { color: theme.textMuted }]}>{field.label}</Text>
+            <TextInput
+              style={[styles.formInput, { color: theme.textPrimary }]}
+              value={fv[field.key]}
+              onChangeText={(v) => setFv({ ...fv, [field.key]: v })}
+              placeholder={field.placeholder}
+              placeholderTextColor={theme.textMuted}
+              keyboardType={field.keyboard as any}
+              secureTextEntry={field.key === 'pin'}
+            />
+          </View>
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
+
 export default function PaymentsScreen() {
   const { theme, isDark } = useTheme();
   const [accounts, setAccounts] = useState<PaymentAccount[]>([]);
@@ -40,7 +80,6 @@ export default function PaymentsScreen() {
   const [editForm, setEditForm] = useState(EMPTY_FORM);
   const [pinVisible, setPinVisible] = useState(false);
   const [accNumVisible, setAccNumVisible] = useState(false);
-  const [balanceVisible, setBalanceVisible] = useState(true);
 
   useFocusEffect(useCallback(() => { loadAccounts().then(setAccounts); }, []));
 
@@ -131,39 +170,8 @@ export default function PaymentsScreen() {
     setShowDetailModal(true);
   };
 
-  const totalBalance = accounts.reduce((s, a) => s + a.balance, 0);
-  const formattedTotal = `₱${totalBalance.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
-  const highestBalance = accounts.length > 0 ? accounts.reduce((a, b) => a.balance > b.balance ? a : b) : null;
   const eWallets = accounts.filter(a => ['gcash','maya','paymaya','grabpay','shopeepay'].some(k => a.name.toLowerCase().includes(k)));
   const banks = accounts.filter(a => !eWallets.includes(a));
-
-  const FormFields = ({ fv, setFv, isEdit }: { fv: typeof EMPTY_FORM; setFv: (f: typeof EMPTY_FORM) => void; isEdit?: boolean }) => (
-    <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 360 }}>
-      <View style={[styles.formCard, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}>
-        {([
-          { label: 'Account Name', key: 'name', placeholder: 'e.g. GCash', keyboard: 'default' },
-          { label: 'Phone / Mobile', key: 'phoneNumber', placeholder: '09XX XXX XXXX', keyboard: 'phone-pad' },
-          { label: 'Account Number', key: 'accountNumber', placeholder: 'Optional', keyboard: 'default' },
-          { label: 'PIN', key: 'pin', placeholder: 'Optional (stored locally)', keyboard: 'number-pad' },
-          { label: 'Balance (₱)', key: 'balance', placeholder: '0.00', keyboard: 'decimal-pad' },
-          { label: 'Notes', key: 'notes', placeholder: 'Optional', keyboard: 'default' },
-        ] as const).map((field, i, arr) => (
-          <View key={field.key} style={[styles.formRow, { borderBottomWidth: i < arr.length - 1 ? 1 : 0, borderBottomColor: theme.borderSubtle }]}>
-            <Text style={[styles.formLabel, { color: theme.textMuted }]}>{field.label}</Text>
-            <TextInput
-              style={[styles.formInput, { color: theme.textPrimary }]}
-              value={(fv as any)[field.key]}
-              onChangeText={(v) => setFv({ ...fv, [field.key]: v })}
-              placeholder={field.placeholder}
-              placeholderTextColor={theme.textMuted}
-              keyboardType={field.keyboard as any}
-              secureTextEntry={field.key === 'pin'}
-            />
-          </View>
-        ))}
-      </View>
-    </ScrollView>
-  );
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.background }]}>
@@ -197,34 +205,10 @@ export default function PaymentsScreen() {
             <Text style={styles.insightLabel}>BANKS</Text>
             <Text style={styles.insightValue}>{banks.length}</Text>
           </View>
-          <TouchableOpacity
-            style={[styles.insightCard, { backgroundColor: 'rgba(255,255,255,0.14)', borderColor: 'rgba(255,255,255,0.3)' }]}
-            onPress={() => setBalanceVisible(v => !v)}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.insightLabel}>TOTAL</Text>
-            <Text style={styles.insightValue}>{balanceVisible ? formattedTotal : '••••'}</Text>
-          </TouchableOpacity>
         </View>
       </LinearGradient>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-
-        {/* Highest balance insight */}
-        {highestBalance && (
-          <View style={[styles.insightBanner, { backgroundColor: theme.surfaceCard, borderColor: theme.border }]}>
-            <View style={[styles.insightBannerIcon, { backgroundColor: theme.primaryMuted }]}>
-              <Ionicons name="trophy-outline" size={16} color={theme.primary} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.insightBannerTitle, { color: theme.textPrimary }]}>Highest Balance</Text>
-              <Text style={[styles.insightBannerSub, { color: theme.textMuted }]}>
-                {highestBalance.name} · {balanceVisible ? `₱${highestBalance.balance.toLocaleString('en-PH', { minimumFractionDigits: 2 })}` : '₱ ••••'}
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={14} color={theme.textMuted} />
-          </View>
-        )}
 
         {/* E-Wallets section */}
         {eWallets.length > 0 && (
@@ -237,7 +221,6 @@ export default function PaymentsScreen() {
               <PaymentAccountCard
                 key={account.id}
                 account={account}
-                hideBalance={!balanceVisible}
                 onPress={() => handleTap(account)}
                 onLongPress={() => handleLongPress(account)}
               />
@@ -256,7 +239,6 @@ export default function PaymentsScreen() {
               <PaymentAccountCard
                 key={account.id}
                 account={account}
-                hideBalance={!balanceVisible}
                 onPress={() => handleTap(account)}
                 onLongPress={() => handleLongPress(account)}
               />
@@ -304,11 +286,6 @@ export default function PaymentsScreen() {
                   <Text style={[styles.accountHeroName, { color: selectedAccount.color }]}>{selectedAccount.name}</Text>
                   <Text style={[styles.accountHeroPhone, { color: selectedAccount.color === '#FFFFFF' ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.5)' }]}>
                     {selectedAccount.phoneNumber}
-                  </Text>
-                  <Text style={[styles.accountHeroBalance, { color: selectedAccount.color }]}>
-                    {balanceVisible
-                      ? `₱${selectedAccount.balance.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
-                      : '₱ ••••••'}
                   </Text>
                 </LinearGradient>
 
@@ -358,11 +335,7 @@ export default function PaymentsScreen() {
                       <Ionicons name="wallet-outline" size={15} color={theme.textMuted} />
                       <Text style={[styles.formLabel, { color: theme.textMuted }]}>Balance</Text>
                     </View>
-                    <Text style={[styles.detailVal, { color: theme.primary, fontWeight: '800' }]}>
-                      {balanceVisible
-                        ? `₱${selectedAccount.balance.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
-                        : '₱ ••••'}
-                    </Text>
+                    <Text style={[styles.detailVal, { color: theme.primary, fontWeight: '800' }]}>Hidden</Text>
                   </View>
                   {selectedAccount.notes && (
                     <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
@@ -414,7 +387,7 @@ export default function PaymentsScreen() {
                 <Ionicons name="close" size={18} color={theme.textSecondary} />
               </TouchableOpacity>
             </View>
-            <FormFields fv={editForm} setFv={setEditForm} isEdit />
+            <FormFields fv={editForm} setFv={setEditForm} theme={theme} />
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 12 }}>
               <TouchableOpacity
                 style={[styles.deleteBtn, { borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.08)', flex: 1 }]}
@@ -497,7 +470,7 @@ export default function PaymentsScreen() {
                 <Ionicons name="close" size={18} color={theme.textSecondary} />
               </TouchableOpacity>
             </View>
-            <FormFields fv={form} setFv={setForm} />
+            <FormFields fv={form} setFv={setForm} theme={theme} />
             <TouchableOpacity style={[styles.saveBtn, { backgroundColor: theme.primary, marginTop: 12 }]} onPress={handleSave} activeOpacity={0.85}>
               <Ionicons name="link-outline" size={18} color={theme.textInverse} />
               <Text style={[styles.saveBtnText, { color: theme.textInverse }]}>Link Account</Text>

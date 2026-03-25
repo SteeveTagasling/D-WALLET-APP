@@ -62,15 +62,13 @@ export default function PaymentAccountCard({
   account,
   onPress,
   onLongPress,
-  hideBalance,
 }: {
   account: PaymentAccount;
   onPress?: () => void;
   onLongPress?: () => void;
-  hideBalance?: boolean;
+  hideBalance?: boolean; // kept for API compatibility, unused
 }) {
   const { theme } = useTheme();
-  const formatted = `₱${account.balance.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
 
   return (
     <TouchableOpacity
@@ -86,7 +84,7 @@ export default function PaymentAccountCard({
         </View>
         <View style={styles.info}>
           <Text style={[styles.name, { color: theme.textPrimary }]}>{account.name}</Text>
-          <Text style={[styles.phone, { color: theme.textMuted }]}>{account.phoneNumber}</Text>
+          <Text style={[styles.phone, { color: theme.textMuted }]}>{'•••• •••• ' + account.phoneNumber.slice(-4)}</Text>
           {account.accountNumber && (
             <View style={styles.metaRow}>
               <Ionicons name="card-outline" size={10} color={theme.textMuted} />
@@ -96,17 +94,12 @@ export default function PaymentAccountCard({
         </View>
       </View>
       <View style={styles.right}>
-        <Text style={[styles.balance, { color: theme.primary }]}>
-          {hideBalance ? '₱ ••••' : formatted}
-        </Text>
-        <View style={styles.rightBottom}>
-          {account.isLinked && (
-            <View style={[styles.badge, { backgroundColor: theme.primaryMuted }]}>
-              <Text style={[styles.badgeText, { color: theme.primary }]}>● Linked</Text>
-            </View>
-          )}
-          <Ionicons name="chevron-forward" size={14} color={theme.textMuted} style={{ opacity: 0.5 }} />
-        </View>
+        {account.isLinked && (
+          <View style={[styles.badge, { backgroundColor: theme.primaryMuted }]}>
+            <Text style={[styles.badgeText, { color: theme.primary }]}>● Linked</Text>
+          </View>
+        )}
+        <Ionicons name="chevron-forward" size={14} color={theme.textMuted} style={{ opacity: 0.5 }} />
       </View>
     </TouchableOpacity>
   );
@@ -128,9 +121,7 @@ const styles = StyleSheet.create({
   phone: { fontSize: 12, letterSpacing: 0.2 },
   metaRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 1 },
   metaText: { fontSize: 10 },
-  right: { alignItems: 'flex-end', gap: 5 },
-  balance: { fontSize: 17, fontWeight: '800', letterSpacing: -0.3 },
-  rightBottom: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  right: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   badge: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 20 },
   badgeText: { fontSize: 10, fontWeight: '700', letterSpacing: 0.2 },
 });

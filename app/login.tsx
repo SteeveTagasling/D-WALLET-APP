@@ -101,7 +101,10 @@ function OTPInput({ value, onChange }: { value: string; onChange: (v: string) =>
   const { theme } = useTheme();
   const inputRef = useRef<TextInput>(null);
 
-  useEffect(() => { inputRef.current?.focus(); }, []);
+  useEffect(() => {
+    const t = setTimeout(() => inputRef.current?.focus(), 150);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <TouchableOpacity onPress={() => inputRef.current?.focus()} activeOpacity={1}>
@@ -128,7 +131,12 @@ function OTPInput({ value, onChange }: { value: string; onChange: (v: string) =>
         onChangeText={(v) => onChange(v.replace(/\D/g, '').slice(0, 6))}
         keyboardType="number-pad"
         maxLength={6}
-        style={{ position: 'absolute', opacity: 0, width: 1, height: 1 }}
+        caretHidden
+        autoFocus
+        blurOnSubmit={false}
+        showSoftInputOnFocus
+        style={{ position: 'absolute', height: 1, width: 1, opacity: 0 }}
+        onBlur={() => inputRef.current?.focus()}
       />
     </TouchableOpacity>
   );
@@ -583,5 +591,5 @@ const styles = StyleSheet.create({
   errorText: { fontSize: 13, color: '#FF5A5A', fontWeight: '600' },
 
   forgotBtn: { marginTop: 24, alignItems: 'center' },
-  forgotText: { fontSize: 13, textDecoration: 'underline' } as any,
+  forgotText: { fontSize: 13, textDecorationLine: 'underline' },
 });
